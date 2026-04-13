@@ -32,9 +32,9 @@ def generate_message(profile, user_bio, context, tone="Casual", voice_samples=No
         return "Generation error: Google API Key missing."
     
     try:
-        # Using gemini-pro for wider compatibility
+        # Using latest alias for better mapping
         llm = ChatGoogleGenerativeAI(
-            model="gemini-pro", 
+            model="gemini-1.5-flash-latest", 
             temperature=0.7,
             google_api_key=api_key
         )
