@@ -4,11 +4,15 @@ import requests
 from datetime import date
 
 def get_db_path():
-    """Returns path to data/messages.db using __file__"""
-    base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    db_dir = os.path.join(base, "data")
+    """Returns path to data/messages.db using the current working directory"""
+    cwd = os.getcwd()
+    db_dir = os.path.join(cwd, "data")
     if not os.path.exists(db_dir):
-        os.makedirs(db_dir)
+        try:
+            os.makedirs(db_dir, exist_ok=True)
+        except Exception:
+            # Fallback to current directory if /data/ is read-only
+            return os.path.join(cwd, "messages.db")
     return os.path.join(db_dir, "messages.db")
 
 def get_proxycurl_key():

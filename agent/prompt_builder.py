@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from agent.voice_calibrator import get_voice_context
@@ -12,10 +12,10 @@ TONE_GUIDE = {
 }
 
 def get_api_key():
-    """Uses exact pattern from PROJECT CONTEXT to get OpenAI API key"""
+    """Returns Google API Key from secrets or .env"""
     try:
         import streamlit as st
-        return st.secrets["OPENAI_API_KEY"]
+        return st.secrets["GOOGLE_API_KEY"]
     except Exception:
         import os
         from dotenv import load_dotenv
@@ -23,16 +23,21 @@ def get_api_key():
             os.path.dirname(os.path.dirname(os.path.abspath(__file__))), ".env"
         )
         load_dotenv(env_path)
-        return os.getenv("OPENAI_API_KEY")
+        return os.getenv("GOOGLE_API_KEY")
 
 def generate_message(profile, user_bio, context, tone="Casual", voice_samples=None):
-    """Generates a personalized LinkedIn outreach message using GPT-4o"""
+    """Generates a personalized LinkedIn outreach message using Google Gemini"""
     api_key = get_api_key()
     if not api_key:
-        return "Generation error: OpenAI API Key missing."
+        return "Generation error: Google API Key missing."
     
     try:
-        llm = ChatOpenAI(model="gpt-4o-mini", temperature=0.8, max_tokens=300, openai_api_key=api_key)
+        # Using Gemini 1.5 Flash for speed and efficiency
+        llm = ChatGoogleGenerativeAI(
+            model="gemini-1.5-flash", 
+            temperature=0.7,
+            google_api_key=api_key
+        )
         
         tone_instruction = TONE_GUIDE.get(tone, TONE_GUIDE["Casual"])
         voice_context = get_voice_context(voice_samples)

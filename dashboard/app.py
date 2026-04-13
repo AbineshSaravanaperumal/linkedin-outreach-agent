@@ -239,9 +239,9 @@ elif page == "Message History":
 elif page == "Settings":
     st.title("⚙️ Settings")
     
-    st.subheader("OpenAI API Key")
-    st.info("Ensure your `.env` file contains your API key or set it in Streamlit Secrets.")
-    st.code("OPENAI_API_KEY=sk-your-key-here")
+    st.subheader("Google API Key")
+    st.info("Ensure your `.env` file contains your Google API key or set it in Streamlit Secrets.")
+    st.code("GOOGLE_API_KEY=your-gemini-key-here")
     
     st.subheader("ProxyCurl API Key")
     st.info("ProxyCurl is used for real-time profile scraping. Without it, we fallback to URL parsing.")
