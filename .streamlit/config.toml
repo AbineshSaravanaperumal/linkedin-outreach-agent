@@ -7,4 +7,4 @@ font = "sans serif"
 
 [server]
 headless = true
-port = 8502
+# Port is removed to allow Streamlit Cloud to manage it automatically
