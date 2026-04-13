@@ -149,6 +149,8 @@ if page == "Generate Message":
                 st.success("Saved!")
                 
             if sc2.button("🔄 Regenerate"):
+                # Clear last message to force a new generation on rerun
+                del st.session_state.last_msg
                 st.rerun()
                 
             st.code(edited_msg, language=None)
