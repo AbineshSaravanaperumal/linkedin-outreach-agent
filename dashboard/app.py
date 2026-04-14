@@ -123,11 +123,25 @@ if page == "Generate Message":
         gen_btn = st.button("🚀 Generate Message", disabled=not (url and bio and profile))
         
         if gen_btn and profile:
-            with st.spinner("Crafting your message..."):
-                result = generate_message(profile, bio, ctx, tone, st.session_state.voice_samples)
+            with st.spinner("Generating..."):
+                result = generate_message(
+                    profile, bio, ctx, tone,
+                    st.session_state.voice_samples
+                )
+
+            # Check if quota was hit
+            if result.startswith("⚠️ OpenAI API quota"):
+                st.warning(result)
+                st.info(
+                    "While the AI generation is paused, you can still: \n"
+                    "- View message history\n"
+                    "- Use voice calibration\n"
+                    "- Run batch mode (messages will queue when credits are added)"
+                )
+            else:
                 st.session_state.last_msg = result
                 st.session_state.last_profile = profile
-                st.session_state.last_tone = tone
+                st.session_state.last_tone = tone # Kept this from original
                 st.session_state.messages_count += 1
                 st.rerun()
 
