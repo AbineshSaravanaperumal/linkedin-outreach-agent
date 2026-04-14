@@ -33,7 +33,7 @@ def generate_message(profile, user_bio, context, tone="Casual", voice_samples=No
 
     try:
         llm = ChatGoogleGenerativeAI(
-            model="gemini-1.5-pro",
+            model="gemini-1.5-flash",
             temperature=0.8,
             google_api_key=api_key
         )
