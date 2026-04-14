@@ -147,30 +147,35 @@ if page == "Generate Message":
 
     with col_out:
         st.subheader("Output")
-        if 'last_msg' in st.session_state:
-            msg = st.session_state.last_msg
-            words = len(msg.split())
-            
-            c1, c2 = st.columns(2)
-            c1.success(f"Tone: {st.session_state.last_tone}")
-            c2.info(f"{words} words")
-            
-            edited_msg = st.text_area("Message Preview", msg, height=220, key="msg_area")
-            
-            sc1, sc2 = st.columns(2)
-            if sc1.button("💾 Save to History"):
-                save_message(st.session_state.last_profile["id"], bio, st.session_state.last_tone, edited_msg)
-                st.success("Saved!")
-                
-            if sc2.button("🔄 Regenerate"):
-                # Clear last message to force a new generation on rerun
-                del st.session_state.last_msg
-                st.rerun()
-                
-            st.code(edited_msg, language=None)
-            st.caption("Copy the message above ↑")
-        else:
-            st.info("Fill in the URL and bio, then click Generate to start.")
+
+        # Demo mode notice
+        st.info(
+            "**Live AI generation is currently in demo mode.** \n\n"
+            "GPT-4o API costs ₹1,000+/month at production usage — "
+            "not sustainable on a student budget right now. "
+            "The full pipeline activates in a funded environment."
+        )
+
+        st.markdown("**What is fully built and working:**")
+        st.markdown("""
+        - LangChain prompt chain with voice calibration
+        - ProxyCurl LinkedIn profile scraping
+        - SQLite message history and batch CSV export
+        - Three tone modes: Casual, Professional, Bold
+        - Full Python backend deployed on Streamlit Cloud
+        """)
+
+        st.markdown("**View the full pipeline in GitHub →**")
+        st.code(
+            "agent/scraper.py          ← ProxyCurl + SQLite\n"
+            "agent/prompt_builder.py   ← LangChain + GPT-4o chain\n"
+            "agent/voice_calibrator.py ← Writing style injection\n"
+            "dashboard/app.py          ← This Streamlit app",
+            language=None
+        )
+
+        if "last_msg" in st.session_state:
+            st.text_area("Last Generated Message", st.session_state.last_msg, height=200)
 
 # --- PAGE: Batch Mode ---
 elif page == "Batch Mode":
