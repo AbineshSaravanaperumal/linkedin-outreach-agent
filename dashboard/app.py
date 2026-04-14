@@ -130,7 +130,7 @@ if page == "Generate Message":
                 )
 
             # Check if quota was hit
-            if result.startswith("⚠️ OpenAI API quota"):
+            if result.startswith("⚠️ API quota reached"):
                 st.warning(result)
                 st.info(
                     "While the AI generation is paused, you can still: \n"

@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from agent.voice_calibrator import get_voice_context
@@ -26,17 +26,16 @@ def get_api_key():
         return os.getenv("OPENAI_API_KEY") or os.getenv("GOOGLE_API_KEY")
 
 def generate_message(profile, user_bio, context, tone="Casual", voice_samples=None):
-    """Generate a personalised LinkedIn message using LangChain + GPT-4o."""
+    """Generate a personalised LinkedIn message using LangChain + Google Gemini."""
     api_key = get_api_key()
-    if not api_key or api_key == "your_openai_api_key_here":
-        return "ERROR: Add your OpenAI API key to the .env file first."
+    if not api_key:
+        return "ERROR: Add your Google API key to the .env file first."
 
     try:
-        llm = ChatOpenAI(
-            model="gpt-4o",
+        llm = ChatGoogleGenerativeAI(
+            model="gemini-1.5-pro",
             temperature=0.8,
-            max_tokens=300,
-            api_key=api_key
+            google_api_key=api_key
         )
 
         system_template = (
@@ -90,9 +89,8 @@ def generate_message(profile, user_bio, context, tone="Casual", voice_samples=No
         err = str(e).lower()
         if "quota" in err or "exceeded" in err or "billing" in err or "429" in err:
             return (
-                "⚠️ OpenAI API quota reached — message generation is temporarily paused.\n\n"
+                "⚠️ API quota reached — message generation is temporarily paused.\n\n"
                 "All other features still work normally.\n\n"
-                "Fix: Add credits at platform.openai.com/billing "
-                "(minimum $5 — lasts months at normal usage)."
+                "Fix: Check your API limits at makersuite.google.com/app/plan_information."
             )
         return f"Generation error: {str(e)}"
